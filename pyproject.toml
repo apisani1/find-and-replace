@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "find-and-replace"
-version = "0.0.0"
+version = "0.0.1"
 description = "A short description of the project"
 authors = ["Antonio Pisani <antonio.pisani@gmail.com>"]
 readme = "README.md"

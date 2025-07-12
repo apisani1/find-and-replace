@@ -1,4 +1,4 @@
-# API Reference
+# Reference
 
 This document provides detailed information about the find-and-replace CLI tool's components and functions.
 

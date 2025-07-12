@@ -26,6 +26,9 @@ version_variable = [
 [tool.poetry.dependencies]
 python = "^3.10"
 
+[tool.poetry.scripts]
+find-and-replace = "find_and_replace.main:main"
+
 [tool.poetry.group.dev]
 optional = true
 

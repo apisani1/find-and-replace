@@ -14,7 +14,7 @@ from datetime import datetime
 project = "find-and-replace"
 copyright = f"{datetime.now().year}, Antonio Pisani"
 author = "Antonio Pisani"
-release = "0.1.0"
+release = "0.1.1"
 
 os.environ["SPHINX_BUILD"] = "True"
 

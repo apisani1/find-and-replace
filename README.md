@@ -3,21 +3,17 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Documentation Status](https://readthedocs.org/projects/find-and-replace/badge/?version=latest)](https://find-and-replace.readthedocs.io/en/latest/?badge=latest)
 
-# Find and Replace CLI
+# Find and Replace
 
-```{include} badges.md
-```
-
-A powerful command-line tool for finding and replacing text in files using regular expressions. Built with Python, this tool provides an intuitive interface for bulk text operations across your project files.
+A command-line tool for finding and replacing text in files using regular expressions. This tool provides an intuitive interface for bulk text operations across your project files.
 
 ## Features
 
-- **Regular Expression Support**: Use powerful regex patterns for complex search and replace operations
+- **Regular Expression Support**: Use regex patterns for complex search and replace operations
 - **Glob Pattern Matching**: Find files using glob expressions like `*.py`, `config.*`, etc.
 - **Recursive Search**: Search through directory trees with the `-r/--recursive` flag
 - **Interactive Confirmation**: Review matches before making changes (unless using `--no-confirm`)
 - **Dry Run Mode**: Preview what would be changed without making actual modifications
-- **Colored Output**: Clear, colored terminal output for better readability
 - **Error Handling**: Graceful handling of permission errors, encoding issues, and invalid regex patterns
 - **Cross-Platform**: Works on Windows, macOS, and Linux
 
@@ -166,128 +162,6 @@ find-and-replace FILE_PATTERN DIRECTORY FIND_PATTERN REPLACE_TEXT [OPTIONS]
 **`-h, --help`**
 : Show help message and exit
 : **Type**: `flag`
-
-## Core Functions
-
-### `find_files(file_pattern, directory, recursive=False)`
-
-Find files matching the pattern in the specified directory.
-
-**Parameters:**
-- `file_pattern` (str): Glob pattern for file names
-- `directory` (str): Directory to search in  
-- `recursive` (bool): Whether to search recursively
-
-**Returns:**
-- `List[str]`: List of file paths matching the pattern
-
-**Example:**
-```python
-files = find_files("*.py", "/path/to/project", recursive=True)
-```
-
-### `process_file(file_path, pattern, replacement, no_confirm=False)`
-
-Process a single file for find and replace operations.
-
-**Parameters:**
-- `file_path` (str): Path to the file to process
-- `pattern` (str): Regular expression pattern to find
-- `replacement` (str): Text to replace matches with
-- `no_confirm` (bool): Whether to skip confirmation prompts
-
-**Returns:**
-- `bool`: `True` if file was modified, `False` otherwise
-
-**Example:**
-```python
-success = process_file("/path/to/file.py", "old_func", "new_func", no_confirm=True)
-```
-
-### `print_colored(message, color=Colors.NC)`
-
-Print message with color formatting.
-
-**Parameters:**
-- `message` (str): Message to print
-- `color` (Colors): Color enum value for formatting
-
-**Example:**
-```python
-print_colored("Success!", Colors.GREEN)
-```
-
-## Color Constants
-
-### `Colors` Enum
-
-ANSI color codes for terminal output.
-
-**Values:**
-- `Colors.GREEN`: Success messages
-- `Colors.YELLOW`: Warning messages  
-- `Colors.RED`: Error messages
-- `Colors.BLUE`: Information messages
-- `Colors.NC`: No color (reset)
-
-## Helper Functions
-
-### `show_matches_for_confirmation(matches, content, replacement)`
-
-Display matches and get user confirmation.
-
-**Parameters:**
-- `matches` (List): List of regex match objects
-- `content` (str): File content
-- `replacement` (str): Replacement text
-
-**Returns:**
-- `bool`: `True` if user confirms, `False` otherwise
-
-### `read_file_content(file_path)`
-
-Read file content with proper error handling.
-
-**Parameters:**
-- `file_path` (str): Path to file
-
-**Returns:**
-- `str`: File content, or empty string on error
-
-### `write_file_content(file_path, content)`
-
-Write file content with proper error handling.
-
-**Parameters:**
-- `file_path` (str): Path to file
-- `content` (str): Content to write
-
-**Returns:**
-- `bool`: `True` if successful, `False` on error
-
-## Configuration Functions
-
-### `create_argument_parser()`
-
-Create and configure the argument parser.
-
-**Returns:**
-- `argparse.ArgumentParser`: Configured parser object
-
-### `validate_regex_pattern(pattern)`
-
-Validate the regex pattern and exit on error.
-
-**Parameters:**
-- `pattern` (str): Regular expression pattern to validate
-
-**Raises:**
-- `SystemExit`: If pattern is invalid
-
-## Exit Codes
-
-- `0`: Success
-- `1`: Invalid regex pattern or other error
 
 ## Regular Expression Examples
 

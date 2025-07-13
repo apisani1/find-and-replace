@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "find-replace-cli"
-version = "0.1.1"
+version = "0.1.1.post1"
 description = "A command-line tool to find and replace text in files using regex patterns."
 authors = ["Antonio Pisani <antonio.pisani@gmail.com>"]
 readme = "README.md"

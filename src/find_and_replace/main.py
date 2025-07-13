@@ -55,7 +55,7 @@ def find_files(file_pattern: str, directory: str, recursive: bool = False) -> Li
     return sorted(files)
 
 
-def show_matches_for_confirmation(matches: List, content: str, replacement: str) -> bool:
+def show_matches_for_confirmation(content: str, matches: List, regex: re.Pattern, replacement: str) -> bool:
     """Show matches and get user confirmation."""
     for i, match in enumerate(matches, 1):
         start, _ = match.span()
@@ -63,10 +63,13 @@ def show_matches_for_confirmation(matches: List, content: str, replacement: str)
         lines = content.split("\n")
         context_line = lines[line_num - 1] if line_num <= len(lines) else ""
 
+        # Show the line after replacement
+        replaced_line = regex.sub(replacement, context_line)
+
         print_colored(f"\nMatch {i} (line {line_num}):", Colors.GREEN)
         print_colored(f"  Found: '{match.group()}'", Colors.NC)
-        print_colored(f"  Context: {context_line}", Colors.NC)
-        print_colored(f"  Replace with: '{replacement}'", Colors.NC)
+        print_colored(f"  Before: {context_line}", Colors.NC)
+        print_colored(f"  After:  {replaced_line}", Colors.GREEN)
 
     response = input(f"\nReplace all {len(matches)} match(es) in this file? (y/n/q): ").lower()
 
@@ -106,7 +109,9 @@ def write_file_content(file_path: str, content: str) -> bool:
         return False
 
 
-def process_file(file_path: str, pattern: str, replacement: str, no_confirm: bool = False) -> bool:
+def process_file(
+    file_path: str, pattern: str, replacement: str, no_confirm: bool = False, dry_run: bool = False
+) -> bool:
     """
     Process a single file for find and replace operations.
 
@@ -115,9 +120,10 @@ def process_file(file_path: str, pattern: str, replacement: str, no_confirm: boo
         pattern: Regular expression pattern to find
         replacement: Text to replace matches with
         no_confirm: Whether to skip confirmation prompts
+        dry_run: Whether to run in dry-run mode (no actual changes)
 
     Returns:
-        True if file was modified, False otherwise
+        True if file was modified (or would be modified in dry-run), False otherwise
     """
     try:
         content = read_file_content(file_path)
@@ -134,9 +140,13 @@ def process_file(file_path: str, pattern: str, replacement: str, no_confirm: boo
         print_colored(f"\nFile: {file_path}", Colors.BLUE)
         print_colored(f"Found {len(matches)} match(es)", Colors.GREEN)
 
-        if not no_confirm and not show_matches_for_confirmation(matches, content, replacement):
+        if not no_confirm and not show_matches_for_confirmation(content, matches, regex, replacement):
             print_colored("Skipping file.", Colors.YELLOW)
             return False
+
+        if dry_run:
+            print_colored(f"[DRY RUN] Would have replaced {len(matches)} match(es)", Colors.GREEN)
+            return True
 
         new_content = regex.sub(replacement, content)
 
@@ -148,6 +158,9 @@ def process_file(file_path: str, pattern: str, replacement: str, no_confirm: boo
 
     except re.error as e:
         print_colored(f"Error: Invalid regular expression - {e}", Colors.RED)
+        return False
+    except Exception as e:
+        print_colored(f"Unexpected error processing file '{file_path}': {e}", Colors.RED)
         return False
 
 
@@ -195,26 +208,6 @@ def get_user_confirmation(file_count: int) -> bool:
     return response == "y"
 
 
-def process_dry_run(file_path: str, pattern: str) -> bool:
-    """Process a file in dry run mode."""
-    try:
-        content = read_file_content(file_path)
-        if not content:
-            return False
-
-        regex = re.compile(pattern)
-        matches = list(regex.finditer(content))
-
-        if matches:
-            print_colored(f"\n[DRY RUN] Would process: {file_path}", Colors.BLUE)
-            print_colored(f"[DRY RUN] Found {len(matches)} match(es)", Colors.GREEN)
-            return True
-        return False
-    except Exception as e:
-        print_colored(f"[DRY RUN] Error reading file '{file_path}': {e}", Colors.RED)
-        return False
-
-
 def print_summary(dry_run: bool, modified_count: int, total_files: int) -> None:
     """Print operation summary."""
     print_colored(f"\n{'=' * 50}", Colors.NC)
@@ -231,6 +224,7 @@ def main() -> None:
     args = parser.parse_args()
 
     validate_regex_pattern(args.text_to_find)
+    validate_regex_pattern(args.text_to_replace)
 
     directory = str(Path(os.path.expanduser(args.directory)).resolve())
 
@@ -254,10 +248,7 @@ def main() -> None:
 
     modified_count = 0
     for file_path in files:
-        if args.dry_run:
-            if process_dry_run(file_path, args.text_to_find):
-                modified_count += 1
-        elif process_file(file_path, args.text_to_find, args.text_to_replace, args.no_confirm):
+        if process_file(file_path, args.text_to_find, args.text_to_replace, args.no_confirm, args.dry_run):
             modified_count += 1
 
     print_summary(args.dry_run, modified_count, len(files))

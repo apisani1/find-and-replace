@@ -1,18 +1,14 @@
-# Find and Replace CLI
+# Find and Replace
 
-```{include} badges.md
-```
-
-A powerful command-line tool for finding and replacing text in files using regular expressions. Built with Python, this tool provides an intuitive interface for bulk text operations across your project files.
+A command-line tool for finding and replacing text in files using regular expressions. This tool provides an intuitive interface for bulk text operations across your project files.
 
 ## Features
 
-- **Regular Expression Support**: Use powerful regex patterns for complex search and replace operations
+- **Regular Expression Support**: Use regex patterns for complex search and replace operations
 - **Glob Pattern Matching**: Find files using glob expressions like `*.py`, `config.*`, etc.
 - **Recursive Search**: Search through directory trees with the `-r/--recursive` flag
 - **Interactive Confirmation**: Review matches before making changes (unless using `--no-confirm`)
 - **Dry Run Mode**: Preview what would be changed without making actual modifications
-- **Colored Output**: Clear, colored terminal output for better readability
 - **Error Handling**: Graceful handling of permission errors, encoding issues, and invalid regex patterns
 - **Cross-Platform**: Works on Windows, macOS, and Linux
 

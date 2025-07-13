@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1.post2] - 2025-07-13
+
+ ### Changes
+- Fix project name in release.yml github workflow
+
+
+
 ## [0.1.1.post1] - 2025-07-13
 
  ### Changes
